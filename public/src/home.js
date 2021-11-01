@@ -14,14 +14,18 @@ function getBooksBorrowedCount(books) {
   return checkedOut.length
 }
 
+function sortedTopFive(array) {
+  array.sort((itemA, itemB) => itemB.count - itemA.count);
+  return array.slice(0,5);
+}
+
 function getMostCommonGenres(books) {
   const commonGenres = [];
   books.forEach(book => {
     const genreMatch = commonGenres.find(genre => genre.name === book.genre );
     genreMatch ? genreMatch.count += 1 : commonGenres.push({name: book.genre, count: 1});
   });
-  commonGenres.sort((genreA, genreB) => genreB.count - genreA.count);
-  return commonGenres.slice(0,5);
+  return sortedTopFive(commonGenres);
 }
 
 function getMostPopularBooks(books) {
@@ -29,8 +33,7 @@ function getMostPopularBooks(books) {
     const numBorrows = book.borrows.length;
     return {name: book.title, count: numBorrows};
   });
-  popularBooks.sort((bookA, bookB) => bookB.count - bookA.count);
-  return popularBooks.slice(0,5);
+  return sortedTopFive(popularBooks);
 }
 
 function getMostPopularAuthors(books, authors) {
@@ -41,8 +44,7 @@ function getMostPopularAuthors(books, authors) {
     const checkOuts = borrows.reduce((acc, borrows) => acc + borrows, 0);
     return {name: `${first} ${last}`, count: checkOuts};
   });
-  authorCheckOuts.sort((authorA, authorB) => authorB.count - authorA.count);
-  return authorCheckOuts.slice(0,5);
+  return sortedTopFive(authorCheckOuts);
 }
 
 module.exports = {
